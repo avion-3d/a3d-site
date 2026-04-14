@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVION 3D — 사용 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#3b82f6;
+  --blue-dim:rgba(59,130,246,0.12);
+  --blue-border:rgba(59,130,246,0.28);
+  --purple:#7c3aed;
+  --bg:#020407;
+  --surface:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.07);
+  --text:#f0f4ff;
+  --dim:rgba(240,244,255,0.55);
+  --faint:rgba(240,244,255,0.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;padding:0 40px;height:60px;
+  background:rgba(2,4,7,0.85);border-bottom:0.5px solid var(--border);
+  backdrop-filter:blur(12px);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo img{width:28px;height:28px;border-radius:6px;object-fit:contain}
+.nav-logo span{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;letter-spacing:2px;color:#fff}
+.nav-logo span b{color:var(--blue)}
+.nav-back{margin-left:auto;display:inline-flex;align-items:center;gap:7px;
+  color:var(--dim);font-size:13px;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:#fff}
+
+/* HERO */
+.guide-hero{padding:120px 40px 60px;text-align:center;max-width:800px;margin:0 auto}
+.guide-tag{display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue-dim);border:0.5px solid var(--blue-border);
+  border-radius:100px;padding:6px 16px;font-size:11px;font-weight:600;
+  color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+.guide-hero h1{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,64px);
+  font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:16px}
+.guide-hero h1 em{font-style:normal;
+  background:linear-gradient(100deg,var(--blue),#a78bfa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.guide-hero p{font-size:16px;color:var(--dim);max-width:520px;margin:0 auto}
+
+/* STEPS */
+.guide-body{max-width:860px;margin:0 auto;padding:0 40px 80px}
+
+.step-section{margin-bottom:48px}
+.step-num{display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  font-family:'Syne',sans-serif;font-weight:800;font-size:14px;
+  color:#fff;flex-shrink:0;margin-bottom:16px}
+.step-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  margin-bottom:8px;letter-spacing:-.5px}
+.step-desc{color:var(--dim);font-size:14.5px;margin-bottom:16px;line-height:1.75}
+
+.step-card{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:14px;padding:20px 24px;margin-top:12px}
+.step-card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.step-card ul li{display:flex;align-items:flex-start;gap:10px;
+  font-size:13.5px;color:var(--dim);line-height:1.6}
+.step-card ol{list-style:none;display:flex;flex-direction:column;gap:10px;counter-reset:step-counter}
+.step-card ol li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--dim);line-height:1.6;counter-increment:step-counter}
+.step-card ol li::before{content:counter(step-counter);min-width:22px;height:22px;border-radius:50%;background:rgba(59,130,246,0.15);border:0.5px solid rgba(59,130,246,0.35);color:var(--blue);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-card ol li b{color:var(--text);font-weight:600}
+.step-card ol li.note{background:rgba(59,130,246,0.05);border:0.5px solid rgba(59,130,246,0.2);border-radius:8px;padding:10px 12px;margin:2px 0}
+.step-card ol li.note::before{content:'💡';background:none;border:none;font-size:14px;min-width:22px}
+.step-card ul li b{color:var(--text);font-weight:600}
+
+.tip-box{background:rgba(59,130,246,0.06);border:0.5px solid var(--blue-border);
+  border-radius:12px;padding:16px 20px;margin-top:12px;
+  display:flex;align-items:flex-start;gap:12px}
+.tip-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.tip-box p{font-size:13px;color:rgba(240,244,255,0.7);line-height:1.65}
+.tip-box p b{color:var(--blue)}
+
+/* DIVIDER */
+.step-divider{border:none;border-top:0.5px solid var(--border);margin:40px 0}
+
+/* MODE CARDS */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.mode-card{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:14px;padding:20px 22px;transition:border-color .2s}
+.mode-card:hover{border-color:rgba(59,130,246,0.3)}
+.mode-card .mode-ico{font-size:28px;margin-bottom:10px}
+.mode-card h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  margin-bottom:6px}
+.mode-card p{font-size:13px;color:var(--dim);line-height:1.6}
+
+/* FAQ */
+.faq{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.faq-item{background:var(--surface);border:0.5px solid var(--border);
+  border-radius:12px;overflow:hidden}
+.faq-q{width:100%;background:none;border:none;color:var(--text);
+  font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;
+  padding:16px 20px;text-align:left;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+.faq-q:hover{background:rgba(255,255,255,0.03)}
+.faq-q>.faq-arrow{color:var(--dim);font-size:16px;transition:transform .3s}
+.faq-q.open .faq-arrow{transform:rotate(45deg)}
+.faq-a{display:none;padding:0 20px 16px;font-size:13px;color:var(--dim);line-height:1.7}
+.faq-a.open{display:block}
+
+/* BOTTOM CTA */
+.guide-cta{text-align:center;padding:60px 40px;border-top:0.5px solid var(--border);margin-top:20px}
+.guide-cta h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;
+  margin-bottom:12px;letter-spacing:-.5px}
+.guide-cta p{color:var(--dim);font-size:14px;margin-bottom:28px}
+.btn-dl{display:inline-flex;align-items:center;gap:9px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:600;
+  padding:14px 32px;cursor:pointer;font-family:'Inter',sans-serif;
+  text-decoration:none;box-shadow:0 0 36px rgba(59,130,246,0.3);transition:all .25s}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 0 54px rgba(59,130,246,0.5)}
+
+/* BG DOTS */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(59,130,246,0.06),transparent)}
+
+.guide-hero,.guide-body,.guide-cta{position:relative;z-index:1}
+nav{z-index:100}
+
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .guide-hero{padding:100px 20px 40px}
+  .guide-body{padding:0 20px 60px}
+  .mode-grid{grid-template-columns:1fr}
+  .guide-cta{padding:40px 20px}
+}
+
+html[lang="en"] .ko-only { display:none }
+html[lang="ko"] .en-only { display:none }
+
+/* 미디어 슬롯 */
+.media-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.media-slot{background:rgba(255,255,255,0.03);border:1px dashed rgba(59,130,246,0.3);
+  border-radius:12px;aspect-ratio:16/9;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;overflow:hidden;position:relative}
+.media-slot img,.media-slot video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px}
+.media-slot .slot-label{font-size:11px;color:rgba(59,130,246,0.5);font-weight:600;letter-spacing:1px;text-transform:uppercase;z-index:1}
+.media-slot .slot-icon{font-size:22px;opacity:0.3;z-index:1}
+@media(max-width:640px){.media-row{grid-template-columns:1fr}}
+.lang-btn.on{background:rgba(59,130,246,0.15)!important;color:#3b82f6!important}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" onerror="this.style.display='none'">
+    <span>AVION <b>3D</b></span>
+  </a>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:12px">
+    <div style="display:flex;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden">
+      <button class="lang-btn" onclick="switchLang('ko')" style="background:none;border:none;padding:6px 13px;font-size:12px;color:rgba(240,244,255,0.55);cursor:pointer">KO</button>
+      <button class="lang-btn on" onclick="switchLang('en')" style="background:none;border:none;padding:6px 13px;font-size:12px;color:rgba(240,244,255,0.55);cursor:pointer">EN</button>
+    </div>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:7px;color:rgba(240,244,255,0.55);font-size:13px;text-decoration:none">← <span class="ko-only">홈으로</span><span class="en-only">Home</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="guide-hero">
+  <div class="guide-tag"><span class="ko-only">📖 사용 가이드</span><span class="en-only">📖 User Guide</span></div>
+  <h1><span class="ko-only">시작하는 방법<br><em>단 3단계</em></span><span class="en-only">Getting Started<br><em>In 3 Steps</em></span></h1>
+  <p><span class="ko-only">AVION 3D를 처음 사용하시나요? 아래 가이드를 따라하면 5분 안에 3D 콘텐츠를 즐길 수 있습니다.</span><span class="en-only">New to AVION 3D? Follow this guide to enjoy 3D content in under 5 minutes.</span></p>
+</div>
+
+<!-- BODY -->
+<div class="guide-body">
+
+  <!-- STEP 0: 준비물 -->
+  <div class="step-section">
+    <div class="step-num">0</div>
+    <div class="step-title"><span class="ko-only">시작 전 준비물</span><span class="en-only">What You Need</span></div>
+    <div class="step-desc"><span class="ko-only">AVION 3D를 사용하려면 아래 항목이 필요합니다.</span><span class="en-only">You'll need the following to use AVION 3D.</span></div>
+    <div class="mode-grid">
+      <div class="mode-card">
+        <div class="mode-ico">🖥️</div>
+        <h3><span class="ko-only">GPU 요구사항</span><span class="en-only">GPU Requirements</span></h3>
+        <p><span class="ko-only">AMD RX 6000 / 7000 시리즈<br>또는 NVIDIA RTX 3060 이상</span><span class="en-only">AMD RX 6000/7000 series<br>or NVIDIA RTX 3060+</span></p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-ico">🥽</div>
+        <h3><span class="ko-only">VR 헤드셋 (스트리밍)</span><span class="en-only">VR Headset (Streaming)</span></h3>
+        <p><span class="ko-only">Meta Quest 3, Samsung Galaxy XR 또는 기타 VR/AR 기기 + Virtual Desktop 앱</span><span class="en-only">Meta Quest 3, Samsung Galaxy XR or other VR/AR + Virtual Desktop app</span></p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="step-divider">
+
+  <!-- STEP 1: 설치 -->
+  <div class="step-section">
+    <div class="step-num">1</div>
+    <div class="step-title">AVION 3D <span class="ko-only">설치</span><span class="en-only">Installation</span></div>
+    <div class="step-desc"><span class="ko-only">설치 파일을 다운로드하고 실행하면 자동으로 설치됩니다.</span><span class="en-only">Download and run the installer — setup is fully automatic.</span></div>
+    <div class="step-card">
+      <ol>
+        <li><span class="ko-only"><b>다운로드</b> 버튼을 클릭해 설치 파일을 받으세요.</span><span class="en-only">Click the <b>Download</b> button to get the installer.</span></li>
+        <li><span class="ko-only"><b>AVION 3D Setup.exe</b> 실행 → 설치 완료까지 기다리세요.</span><span class="en-only">Run <b>AVION 3D Setup.exe</b> and wait for installation to complete.</span></li>
+        <li><span class="ko-only">첫 실행 시 필요한 AI 모델이 자동으로 다운로드됩니다. (약 1~2분 소요)</span><span class="en-only">On first launch, AI models download automatically (approx. 1–2 min).</span></li>
+        <li><span class="ko-only">라이선스 키가 있다면 설정 → 계정에서 입력해 활성화하세요.</span><span class="en-only">If you have a license key, go to Settings → Account to activate it.</span></li>
+      </ol>
+    </div>
+    <div class="tip-box">
+      <div class="tip-icon">💡</div>
+      <p><span class="ko-only"><b>무료 체험:</b> 라이선스 없이도 스트리밍 3회 × 10분, 영상 변환 3분을 무료로 체험할 수 있습니다.</span><span class="en-only"><b>Free Trial:</b> Without a license, you get 3×10min streaming and 3min video conversion for free.</span></p>
+    </div>
+  </div>
+
+  <hr class="step-divider">
+
+  <!-- STEP 2: 두 가지 모드 -->
+  <div class="step-section">
+    <div class="step-num">2</div>
+    <div class="step-title"><span class="ko-only">두 가지 변환 모드</span><span class="en-only">Two Conversion Modes</span></div>
+    <div class="step-desc"><span class="ko-only">사용 목적에 따라 두 가지 모드 중 선택하세요.</span><span class="en-only">Choose the mode that fits your purpose.</span></div>
+    <div class="mode-grid">
+      <div class="mode-card">
+        <div class="mode-ico">🎮</div>
+        <h3><span class="ko-only">실시간 3D 스트리밍</span><span class="en-only">Live 3D Streaming</span></h3>
+        <p><span class="ko-only">게임, 영화, 데스크탑 화면을 실시간으로 3D SBS로 변환해 VR 헤드셋에서 바로 감상합니다.</span><span class="en-only">Convert games, movies, and desktop to 3D SBS in real time and watch in your VR headset.</span></p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-ico">🎬</div>
+        <h3><span class="ko-only">3D 영상 파일 변환</span><span class="en-only">3D Video File Conversion</span></h3>
+        <p><span class="ko-only">MKV, MP4 등 영상 파일을 Half SBS 3D로 영구 변환합니다. 애니, 영화를 3D 컬렉션으로 만드세요.</span><span class="en-only">Permanently convert MKV, MP4 to Half SBS 3D. Build your anime and movie 3D collection.</span></p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="step-divider">
+
+  <!-- STEP 3a: 스트리밍 -->
+  <div class="step-section">
+    <div class="step-num">3</div>
+    <div class="step-title"><span class="ko-only">실시간 스트리밍 사용법</span><span class="en-only">How to Use Live Streaming</span></div>
+    <div class="step-desc"><span class="ko-only">VR 헤드셋에서 PC 화면을 실시간 3D로 감상하는 방법입니다.</span><span class="en-only">How to watch your PC screen in real-time 3D on your VR headset.</span></div>
+    <div class="step-card">
+      <ol>
+        <li><span class="ko-only">PC에서 <b>AVION 3D</b> 실행 → <b>실시간 3D</b> 선택</span><span class="en-only">Launch <b>AVION 3D</b> on PC → select <b>Live 3D</b></span></li>
+        <li><span class="ko-only">원하는 설정(깊이, 해상도, FPS) 조절 후 <b>▶ 시작</b> 클릭</span><span class="en-only">Adjust settings (depth, resolution, FPS) then click <b>▶ Start</b></span></li>
+        <li class="note"><span class="ko-only">메인 모니터의 <b>실시간 3D</b> 화면을 <b>2번째 모니터</b>로 옮겨주세요. Virtual Desktop에서 보는 화면은 2번째 모니터를 통해 시청해야 합니다.</span><span class="en-only">Move the <b>Live 3D</b> window from your main monitor to your <b>2nd monitor</b>. Virtual Desktop streams from the 2nd monitor.</span></li>
+        <li><span class="ko-only">VR 헤드셋을 착용하고 <b>Virtual Desktop</b> 앱 실행</span><span class="en-only">Put on your VR headset and launch the <b>Virtual Desktop</b> app</span></li>
+        <li><span class="ko-only">Virtual Desktop에서 <b>PC 화면 스트리밍</b> → AVION 3D 화면이 3D로 보입니다</span><span class="en-only">In Virtual Desktop, start <b>PC streaming</b> → AVION 3D appears in 3D</span></li>
+        <li><span class="ko-only">Virtual Desktop이 연결된 화면에서 <b>AVION 3D 창으로 전환</b>해서 보세요. 전환 버튼은 Virtual Desktop 접속 후 <b>하단 메뉴</b>를 누르면 나옵니다.</span><span class="en-only">Switch to the <b>AVION 3D window</b> in Virtual Desktop. Tap the <b>bottom menu</b> inside Virtual Desktop to find the window switch button.</span></li>
+        <li><span class="ko-only">준비가 되셨다면 <b>메인 모니터</b>에서 영화, 애니메이션을 실행하세요. VR 헤드셋에서 <b>3D로 시청</b>하실 수 있습니다! 🎉</span><span class="en-only">You're all set! Play a movie or anime on your <b>main monitor</b> and enjoy it in <b>3D</b> on your VR headset! 🎉</span></li>
+      </ol>
+    </div>
+    <div class="tip-box">
+      <div class="tip-icon">💡</div>
+      <p><span class="ko-only"><b>Virtual Desktop</b>은 Meta Quest / Galaxy XR 스토어에서 별도 구매가 필요합니다. 무료로 사용하시려면 <b>Bigscreen</b>을 이용하셔도 좋습니다.</span><span class="en-only"><b>Virtual Desktop</b> requires a separate purchase from the Meta Quest / Galaxy XR store. For a free option, try <b>Bigscreen</b>.</span></p>
+    </div>
+    <!-- 미디어 슬롯: step3-1.png/mp4, step3-2.png/mp4, step3-3.png/mp4 -->
+    <div class="media-row">
+      <div class="media-slot">
+        <img src="step3-1.png" onerror="this.style.display='none'">
+        <video src="step3-1.mp4" autoplay muted loop playsinline onerror="this.style.display='none'"></video>
+        <div class="slot-icon">🎮</div>
+        <div class="slot-label">step3-1</div>
+      </div>
+      <div class="media-slot">
+        <img src="step3-2.png" onerror="this.style.display='none'">
+        <video src="step3-2.mp4" autoplay muted loop playsinline onerror="this.style.display='none'"></video>
+        <div class="slot-icon">🎮</div>
+        <div class="slot-label">step3-2</div>
+      </div>
+      <div class="media-slot">
+        <img src="step3-3.png" onerror="this.style.display='none'">
+        <video src="step3-3.mp4" autoplay muted loop playsinline onerror="this.style.display='none'"></video>
+        <div class="slot-icon">🎮</div>
+        <div class="slot-label">step3-3</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="step-divider">
+
+  <!-- STEP 3b: 영상 변환 -->
+  <div class="step-section">
+    <div class="step-num">4</div>
+    <div class="step-title"><span class="ko-only">영상 파일 변환 사용법</span><span class="en-only">How to Convert Video Files</span></div>
+    <div class="step-desc"><span class="ko-only">영상 파일을 3D SBS로 변환하는 방법입니다.</span><span class="en-only">How to convert video files to 3D SBS format.</span></div>
+    <div class="step-card">
+      <ol>
+        <li><span class="ko-only"><b>3D 영상 변환</b> 선택 → <b>파일 선택</b>으로 영상 파일을 불러오세요 (MKV, MP4 지원)</span><span class="en-only">Select <b>3D Video Convert</b> → click <b>Select File</b> to load your video (MKV, MP4 supported)</span></li>
+        <li><span class="ko-only"><b>출력 폴더</b>를 선택하세요. 변환된 파일이 저장될 위치입니다.</span><span class="en-only">Choose an <b>output folder</b> where the converted file will be saved.</span></li>
+        <li><span class="ko-only">AI 모델, 3D 깊이 등 원하는 설정 후 <b>▶ 시작</b> 클릭</span><span class="en-only">Configure AI model, 3D depth and other settings, then click <b>▶ Start</b></span></li>
+        <li><span class="ko-only">변환 완료 후 출력 폴더가 자동으로 열립니다.</span><span class="en-only">The output folder opens automatically when conversion is complete.</span></li>
+        <li><span class="ko-only">변환된 파일을 VR 헤드셋으로 재생하면 3D 입체감을 경험할 수 있습니다.</span><span class="en-only">Play the converted file on your VR headset to experience full 3D depth.</span></li>
+      </ol>
+    </div>
+    <div class="tip-box">
+      <div class="tip-icon">💡</div>
+      <p><span class="ko-only"><b>Depth Map 미리보기:</b> 변환 전 🔍 Depth 버튼으로 AI가 인식하는 깊이감을 미리 확인할 수 있습니다.</span><span class="en-only"><b>Depth Map Preview:</b> Click the 🔍 Depth button before converting to preview the AI depth estimation.</span></p>
+    </div>
+    <!-- 미디어 슬롯: step4-1.png/mp4, step4-2.png/mp4, step4-3.png/mp4 -->
+    <div class="media-row">
+      <div class="media-slot">
+        <img src="step4-1.png" onerror="this.style.display='none'">
+        <video src="step4-1.mp4" autoplay muted loop playsinline onerror="this.style.display='none'"></video>
+        <div class="slot-icon">🎬</div>
+        <div class="slot-label">step4-1</div>
+      </div>
+      <div class="media-slot">
+        <img src="step4-2.png" onerror="this.style.display='none'">
+        <video src="step4-2.mp4" autoplay muted loop playsinline onerror="this.style.display='none'"></video>
+        <div class="slot-icon">🎬</div>
+        <div class="slot-label">step4-2</div>
+      </div>
+      <div class="media-slot">
+        <img src="step4-3.png" onerror="this.style.display='none'">
+        <video src="step4-3.mp4" autoplay muted loop playsinline onerror="this.style.display='none'"></video>
+        <div class="slot-icon">🎬</div>
+        <div class="slot-label">step4-3</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="step-divider">
+
+  <!-- FAQ -->
+  <div class="step-section">
+    <div class="step-title"><span class="ko-only">자주 묻는 질문</span><span class="en-only">FAQ</span></div>
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="ko-only">내 GPU가 지원되나요?</span><span class="en-only">Is my GPU supported?</span>
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a"><span class="ko-only">AMD RX 6000/7000 시리즈 및 NVIDIA RTX 3060 이상, RTX 4000/5000 시리즈를 지원합니다. Intel GPU는 현재 지원하지 않습니다.</span><span class="en-only">AMD RX 6000/7000 series and NVIDIA RTX 3060+, 4000/5000 series are supported. Intel GPU is not currently supported.</span></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="ko-only">첫 실행이 너무 느린데 왜 그런가요?</span><span class="en-only">Why is the first launch so slow?</span>
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a"><span class="ko-only">첫 실행 시 AI 모델을 VRAM에 로딩하는 시간이 필요합니다. 한 번 로딩되면 이후부터는 빠르게 실행됩니다.</span><span class="en-only">The first launch loads AI models into VRAM, which takes time. After that, it starts quickly.</span></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="ko-only">HDR 영상도 변환되나요?</span><span class="en-only">Can HDR videos be converted?</span>
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a"><span class="ko-only">HDR 영상은 색상이 깨질 수 있습니다. HandBrake 등으로 SDR로 변환 후 사용을 권장합니다.</span><span class="en-only">HDR videos may have color issues. We recommend converting to SDR first using HandBrake.</span></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="ko-only">어떤 VR 앱을 써야 하나요?</span><span class="en-only">What VR app should I use?</span>
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a"><span class="ko-only">실시간 스트리밍은 Virtual Desktop, ALVR, BigScreen Beyond 등을 지원합니다. 변환된 영상은 헤드셋 기본 플레이어로 바로 재생 가능합니다.</span><span class="en-only">Live streaming supports Virtual Desktop, ALVR, Bigscreen Beyond and more. Converted videos play directly in any headset player.</span></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span class="ko-only">라이선스 키는 어디서 구매하나요?</span><span class="en-only">Where can I buy a license key?</span>
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a"><span class="ko-only">홈페이지 구독 버튼 또는 Gumroad에서 구매할 수 있습니다. 월간/연간 구독과 평생권을 제공합니다.</span><span class="en-only">Purchase via the Subscribe button on our homepage or through Gumroad. Monthly, yearly, and lifetime plans available.</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM CTA -->
+<div class="guide-cta">
+  <h2><span class="ko-only">지금 바로 시작하세요</span><span class="en-only">Get Started Now</span></h2>
+  <p><span class="ko-only">무료 체험으로 AVION 3D를 경험해보세요.</span><span class="en-only">Try AVION 3D free — no license required to start.</span></p>
+  <button onclick="downloadExe()" class="btn-dl">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    <span class="ko-only">Windows용 다운로드</span><span class="en-only">Download for Windows</span>
+  </button>
+</div>
+
+<script>
+let _lang='en';
+function switchLang(l){
+  _lang=l;
+  document.documentElement.lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.classList.toggle('on',b.textContent.trim()===l.toUpperCase());
+  });
+}
+function downloadExe(){
+  const a=document.createElement('a');
+  a.href='https://github.com/avion-3d/avion-releases/releases/latest/download/AVION.3D.Setup.exe';
+  a.download='AVION 3D Setup.exe';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+function toggleFaq(btn){
+  const a=btn.nextElementSibling
+  const isOpen=a.classList.contains('open')
+  document.querySelectorAll('.faq-a.open').forEach(el=>el.classList.remove('open'))
+  document.querySelectorAll('.faq-q.open').forEach(el=>el.classList.remove('open'))
+  if(!isOpen){ a.classList.add('open'); btn.classList.add('open') }
+}
+if(document.readyState!=='loading')switchLang('en');else document.addEventListener('DOMContentLoaded',()=>switchLang('en'));
+</script>
+</body>
+</html>
